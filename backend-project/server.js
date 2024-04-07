@@ -1,12 +1,29 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const fs = require('fs');
+const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+
+const dbPath = path.join(__dirname, 'data.db');
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+    if (err) {
+        console.error(err.message);
+    }
+    console.log('Connected to the SQLite database.');
+});
+
+db.run(`CREATE TABLE IF NOT EXISTS sensor_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    latitude REAL,
+    longitude REAL,
+    heartRate REAL,
+    steps INTEGER,
+    timestamp TEXT
+)`);
 
 const parseMessage = (message) => {
     const regex = /Latitude: ([\d.-]+), Longitude: ([\d.-]+), Heart Rate: Fréquence cardiaque: ([\d.-]+), Steps: (.+)/;
@@ -25,31 +42,13 @@ const parseMessage = (message) => {
     }
 };
 
-const saveDataToFile = (data) => {
-    const now = new Date();
-    data.timestamp = now;
-
-    const filePath = path.join(__dirname, 'data.json');
-
-    fs.readFile(filePath, (err, fileData) => {
-        let savedData = [];
-        if (!err && fileData) {
-            try {
-                savedData = JSON.parse(fileData.toString());
-            } catch (parseError) {
-                console.error('Erreur lors du parsing des données existantes:', parseError);
-            }
+const saveDataToSQLite = (data) => {
+    const now = new Date().toISOString();
+    db.run(`INSERT INTO sensor_data (latitude, longitude, heartRate, steps, timestamp) VALUES (?, ?, ?, ?, ?)`, [data.latitude, data.longitude, data.heartRate, data.steps, now], function(err) {
+        if (err) {
+            return console.error('Erreur d\'insertion dans la base de données:', err.message);
         }
-
-        savedData.push(data);
-
-        fs.writeFile(filePath, JSON.stringify(savedData, null, 2), (err) => {
-            if (err) {
-                console.error('Erreur d\'écriture du fichier:', err);
-            } else {
-                console.log('Fichier écrit avec succès');
-            }
-        });
+        console.log(`Un enregistrement ajouté avec succès avec l'id ${this.lastID}`);
     });
 };
 
@@ -64,8 +63,8 @@ io.on('connection', (socket) => {
     socket.on('messageForlocation', (data) => {
         const parsedData = parseMessage(data);
         console.log(parsedData);
-        saveDataToFile(parsedData);
-        socket.emit('messageToWatch', { data: 'Location received' });
+        saveDataToSQLite(parsedData); // Utiliser SQLite pour sauvegarder
+        socket.emit('messageToWatch', { data: 'data received' });
     });
 
     socket.on('disconnect', () => {
