@@ -1,0 +1,61 @@
+.login-logo {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.login-logo img {
+  max-width: 150px; /* Adjust the size to fit your logo */
+  margin-top: 200;
+}
+
+/* Adjust link styles */
+a {
+  color: var(--ion-color-secondary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+.background-image {
+  /* Ajoutez votre style pour l'image d'arrière-plan */
+}
+
+.form-container {
+  padding: 0 32px;
+  text-align: center;
+  margin-top: 33px;
+}
+
+.error-text {
+  margin-top: 40px;
+}
+
+.login-button {
+  margin-top: 40px;
+}
+
+.below-container {
+  margin: 16px;
+  text-align: center;
+}
+
+.terms {
+  font-size: 13px;
+}
+
+.signin-signup {
+  text-align: center;
+  color: #444444;
+  font-size: 12px;
+
+}
+.forgot-password {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 12px;
+ 
+}
+

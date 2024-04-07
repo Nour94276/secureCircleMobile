@@ -1,0 +1,39 @@
+.course-card {
+  text-align: center; // Centre le contenu du texte
+  background-color: #f4f4f4; // Couleur de fond légère pour la carte
+  color: #333; // Couleur pour le texte
+
+  ion-card-header {
+    background: #add8e6; // Une couleur de fond pour l'en-tête de la carte
+    color: #fff; // Couleur du texte de l'en-tête
+  }
+
+  ion-card-title {
+    font-weight: bold;
+    margin-bottom: 5px; // Espacement pour le sous-titre
+  }
+
+  ion-card-subtitle {
+    font-size: 0.8em;
+    color: #333; // Couleur pour le sous-titre
+  }
+
+  .card-content {
+    .image-container {
+      display: flex;
+      justify-content: center; // Centre l'image horizontalement
+      margin-top: 15px; // Espacement au-dessus de l'image
+
+      img {
+        max-width: 80%; // Largeur maximale de l'image
+        height: auto; // Hauteur automatique pour maintenir le ratio aspect
+      }
+    }
+
+    .card-instruction {
+      color: #666; // Couleur du texte pour les instructions
+      margin-top: 20px; // Espacement au-dessus des instructions
+      font-style: italic;
+    }
+  }
+}

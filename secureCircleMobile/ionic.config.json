@@ -1,0 +1,7 @@
+{
+  "name": "secureCircleMobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
